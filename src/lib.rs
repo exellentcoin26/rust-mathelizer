@@ -5,7 +5,6 @@ pub struct Expression {
     tokens: Vec<Token>,
 }
 
-
 #[derive(Debug, PartialEq)]
 enum Token {
     Number(u64), // floats should be represented as devisions and negative numbers are represented as operations
@@ -20,11 +19,11 @@ enum Token {
 impl Expression {
     /// Creates a new expression from the given string slice.
     /// Tokenizes it and stores it in postfix form using the [Shunting-Yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
-    /// 
+    ///
     /// # Panics
-    /// 
+    ///
     /// Panics when the given expression contains invalid tokens.
-    /// 
+    ///
     /// # Todo
     /// Check if expression has balanced brackets.
     pub fn new(expr: &str) -> Self {
@@ -55,28 +54,18 @@ impl Expression {
 
                     // check if number is longer than one char
                     loop {
-                        if let Some(next) = iter.peek() {
-                            match next {
-                                '0'..='9' => curr_number.push(iter.next().unwrap()),
-                                _ => break,
-                            }
-                        } else {
-                            break;
+                        match iter.peek() {
+                            Some('0'..='9') => curr_number.push(iter.next().unwrap()),
+                            _ => break,
                         }
                     }
 
                     tokens.push(Token::Number(curr_number.parse().unwrap()));
 
                     // check if next char needs to be a multiplication
-                    if let Some(next) = iter.peek() {
-                        match next {
-                            '(' => {
-                                tokens.push(Token::Prod);
-                            }
-                            _ => (),
-                        }
-                    } else {
-                        // println!("End of expression reached.");
+                    match iter.peek() {
+                        Some('(') => curr_number.push(iter.next().unwrap()),
+                        _ => break,
                     }
                 },
                 '*' => tokens.push(Token::Prod),
