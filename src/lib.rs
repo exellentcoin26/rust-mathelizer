@@ -64,8 +64,10 @@ impl Expression {
 
                     // check if next char needs to be a multiplication
                     match iter.peek() {
-                        Some('(') => curr_number.push(iter.next().unwrap()),
-                        _ => break,
+                        Some('(') => {
+                            tokens.push(Token::Prod);
+                        },
+                        _ => (),
                     }
                 },
                 '*' => tokens.push(Token::Prod),
